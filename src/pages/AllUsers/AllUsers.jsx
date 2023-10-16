@@ -9,8 +9,8 @@ const AllUsers = () => {
     const allUsers = useLoaderData();
     const [appUsers, setAppUsers] = useState(() => allUsers);
 
-    console.log(user)
-    console.log(appUsers)
+    // console.log(user)
+    // console.log(appUsers)
 
     const handelUserDelete = (id) => {
         Swal.fire({
