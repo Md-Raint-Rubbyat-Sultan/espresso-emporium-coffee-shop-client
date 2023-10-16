@@ -7,7 +7,7 @@ import { AuthContext } from "../../Providers/AuthProvider";
 import Swal from "sweetalert2";
 
 const SignUp = () => {
-    const { createUser, updateUserProfile } = useContext(AuthContext);
+    const { createUser, updateUserProfile, setLoading } = useContext(AuthContext);
     const [formInputFiled, setFormInputFiled] = useState(() => { });
     const [showPass, setShowPass] = useState(() => false);
     const location = useLocation();
@@ -80,7 +80,10 @@ const SignUp = () => {
                 text: 'Do you want to continue',
                 icon: 'error',
                 confirmButtonText: 'Get it.'
-            }));
+            }))
+            .finally(() => {
+                setLoading(() => false);
+            })
     }
 
     return (
@@ -128,7 +131,7 @@ const SignUp = () => {
                                 </div>
                             </div>
                             <CommonButton btnType={"submit"} btnTitle="Register" customCss={"w-full mt-6"} btnColor={"#331A15"} />
-                            <p className="pt-4">Already have an account? Please <Link className="font-rancho underline text-xl" to={"/signin"} state={location?.state}>Sign In</Link></p>
+                            <p className="pt-4">Already have an account? Please <Link className="font-rancho underline text-xl" to={"/signin"}>Sign In</Link></p>
                         </form>
                     </div>
                 </div>

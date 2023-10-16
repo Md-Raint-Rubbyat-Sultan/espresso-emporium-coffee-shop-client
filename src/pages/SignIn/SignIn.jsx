@@ -7,7 +7,7 @@ import { AuthContext } from "../../Providers/AuthProvider";
 import Swal from "sweetalert2";
 
 const SignIn = () => {
-    const { signInUser, resetPassword } = useContext(AuthContext);
+    const { signInUser, resetPassword, setLoading } = useContext(AuthContext);
     const [formInputFiled, setFormInputFiled] = useState(() => { });
     const [showPass, setShowPass] = useState(() => false);
     const location = useLocation();
@@ -90,6 +90,9 @@ const SignIn = () => {
                     icon: 'error',
                     confirmButtonText: 'Get it.'
                 }))
+                .finally(() => {
+                    setLoading(() => false);
+                })
         } else {
             Swal.fire({
                 title: `Must Have To Provide Email`,
@@ -136,7 +139,7 @@ const SignIn = () => {
                                 </div>
                             </div>
                             <CommonButton btnType={"submit"} btnTitle="Sign In" customCss={"w-full mt-6"} btnColor={"#331A15"} />
-                            <p className="pt-4">Don&lsquo;t have an account? Please <Link className="font-rancho underline text-xl" to={"/signup"}>Register</Link></p>
+                            <p className="pt-4">Don&lsquo;t have an account? Please <Link className="font-rancho underline text-xl" to={"/signup"} state={location?.state}>Register</Link></p>
                         </form>
                     </div>
                 </div>
