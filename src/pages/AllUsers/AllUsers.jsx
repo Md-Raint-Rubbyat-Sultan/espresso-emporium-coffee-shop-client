@@ -23,7 +23,7 @@ const AllUsers = () => {
             confirmButtonText: 'Yes, delete it!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const res = await fetch(`http://localhost:5000/user/${id}`, {
+                const res = await fetch(`https://coffee-shope-server-md-raint-rubbyat-sultan.vercel.app/user/${id}`, {
                     method: "DELETE",
                 });
                 const feedback = await res.json();

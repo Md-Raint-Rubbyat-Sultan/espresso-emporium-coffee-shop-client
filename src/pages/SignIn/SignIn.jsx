@@ -7,7 +7,7 @@ import { AuthContext } from "../../Providers/AuthProvider";
 import Swal from "sweetalert2";
 
 const SignIn = () => {
-    const { signInUser, resetPassword, setLoading } = useContext(AuthContext);
+    const { signInUser, resetPassword, setLoading, signInWithGoogle } = useContext(AuthContext);
     const [formInputFiled, setFormInputFiled] = useState(() => { });
     const [showPass, setShowPass] = useState(() => false);
     const location = useLocation();
@@ -103,6 +103,56 @@ const SignIn = () => {
         }
     }
 
+    const handelGoogleSignIn = (e) => {
+        e.preventDefault();
+        signInWithGoogle()
+            .then(async (result) => {
+                // post user info to data base
+                try {
+                    const res = await fetch('https://coffee-shope-server-md-raint-rubbyat-sultan.vercel.app/user', {
+                        method: "POST",
+                        headers: {
+                            "content-type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            email: result.user?.email,
+                            userCreated: result.user?.metadata?.creationTime
+                        })
+                    });
+                    const feedback = await res.json();
+                    if (feedback?.acknowledged) {
+                        Swal.fire({
+                            title: 'Successfully Sign In!',
+                            text: 'Please! continue.',
+                            icon: 'success',
+                            confirmButtonText: 'Cool'
+                        }).then((confirmed) => {
+                            if (confirmed.isConfirmed) {
+                                navigate(location?.state || '/');
+                            }
+                        })
+                    }
+                    // console.log(result.user, feedback);
+                } catch (er) {
+                    Swal.fire({
+                        title: `${er.message}`,
+                        text: 'Do you want to continue',
+                        icon: 'error',
+                        confirmButtonText: 'Get it.'
+                    })
+                }
+            })
+            .catch((er) => Swal.fire({
+                title: `${er.message}`,
+                text: 'Do you want to continue',
+                icon: 'error',
+                confirmButtonText: 'Get it.'
+            }))
+            .finally(() => {
+                setLoading(() => false);
+            })
+    }
+
     return (
         <div>
             <HelmetTitle title="Sign-In" />
@@ -139,6 +189,9 @@ const SignIn = () => {
                                 </div>
                             </div>
                             <CommonButton btnType={"submit"} btnTitle="Sign In" customCss={"w-full mt-6"} btnColor={"#331A15"} />
+                            <span onClick={handelGoogleSignIn} className="block mt-6">
+                                <CommonButton btnType={"button"} btnTitle={`Sign In With Google`} customCss={"w-full"} btnColor={"#331A15 flex justify-center"} />
+                            </span>
                             <p className="pt-4">Don&lsquo;t have an account? Please <Link className="font-rancho underline text-xl" to={"/signup"} state={location?.state}>Register</Link></p>
                         </form>
                     </div>
